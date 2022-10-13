@@ -1,0 +1,75 @@
+---
+title: "Reading data from web"
+author: "Shun Xie"
+date: "2022-10-13"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(rvest)
+library(httr)
+```
+
+```{r}
+url = "http://samhda.s3-us-gov-west-1.amazonaws.com/s3fs-public/field-uploads/2k15StateFiles/NSDUHsaeShortTermCHG2015.htm"
+drug_use_html = read_html(url)
+```
+
+```{r}
+# There are lots of table, we only need the first list in the list
+drug_use_html %>%
+  html_table() %>% 
+  first() %>% 
+  #specify the row number, or slice out the row
+  slice(-1)
+```
+SW data
+```{r}
+url = "https://www.imdb.com/list/ls070150896/"
+swm_html = 
+  read_html(url)
+```
+
+
+
+```{r}
+title_vec = 
+  swm_html %>%
+  html_elements(".lister-item-header a") %>%
+  html_text()
+
+
+
+gross_rev_vec = 
+  swm_html %>%
+  html_elements(".text-small:nth-child(7) span:nth-child(5)") %>%
+  html_text()
+
+runtime_vec = 
+  swm_html %>%
+  html_elements(".runtime") %>%
+  html_text()
+
+swm_df = 
+  tibble(
+    title = title_vec,
+    rev = gross_rev_vec,
+    runtime = runtime_vec)
+
+```
+
+
+```{r}
+
+```
+
+
+
+
+
+
